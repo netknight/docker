@@ -12,7 +12,6 @@ RUN apt-get update && apt-get -y install htop mc sysstat nano less telnet tracer
 # Install Java8 runtime
 ENV JAVA_HOME=/opt/jre
 RUN wget --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u40-b26/jre-8u40-linux-x64.tar.gz
-RUN mkdir $JAVA_HOME
 RUN tar -zxf jre*.gz -C /opt && ln -s /opt/jre1.8.0_40 $JAVA_HOME
 
 RUN update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 100
