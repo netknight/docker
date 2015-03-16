@@ -7,7 +7,7 @@ VOLUME ["/tmp"]
 
 # Install base packages
 #RUN apt-get update && apt-get -y install htop mc sysstat nano firmware-linux-free iptables less logrotate netcat-traditional rsyslog iputils-ping telnet traceroute tcpd wget busybox cron apt-utils ed vim man sudo ntp ssmtp zip unzip
-RUN apt-get update && apt-get -y install htop mc sysstat nano less telnet traceroute wget busybox ed vim man sudo zip unzip
+RUN apt-get update && apt-get -y install htop mc sysstat nano less telnet traceroute wget busybox ed vim man sudo zip unzip curl ssh openssl netcat logrotate
 
 # Install Java8 runtime
 ENV JAVA_HOME=/opt/jre
