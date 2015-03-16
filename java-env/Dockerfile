@@ -14,4 +14,7 @@ RUN update-alternatives --install /usr/bin/java java  /opt/jre/jre1.8.0_40/bin/j
 
 ENV JAVA_HOME=/opt/jre/jre1.8.0_40
 
+# Create user uder which product will be run
+RUN useradd -m -d /opt/product -s /bin/bash product && chmod 770 /opt/product
+
 CMD ["bash"]
