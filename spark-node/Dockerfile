@@ -1,9 +1,8 @@
 FROM netknight/java-env
+MAINTAINER Jevgeni Goloborodko <jevgeni@alostel.com>
+VOLUME ["/tmp"]
 
 USER root
-
-RUN wget http://www.eu.apache.org/dist/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz | tar -xz -C /opt/
-RUN ln -s /opt/hadoop-2.6.0 /opt/hadoop
 
 ENV HADOOP_PREFIX /opt/hadoop
 ENV HADOOP_COMMON_HOME $HADOOP_PREFIX
@@ -12,6 +11,9 @@ ENV HADOOP_MAPRED_HOME $HADOOP_COMMON_HOME
 ENV HADOOP_YARN_HOME $HADOOP_COMMON_HOME
 ENV HADOOP_CONF_DIR $HADOOP_PREFIX/etc/hadoop
 ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
+
+RUN wget http://www.eu.apache.org/dist/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz | tar -xz -C /opt/
+RUN ln -s /opt/hadoop-2.6.0 $HADOOP_COMMON_HOME
 
 #RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/java/default\nexport HADOOP_PREFIX=/usr/local/hadoop\nexport HADOOP_HOME=/usr/local/hadoop\n:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 #RUN sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop/:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
