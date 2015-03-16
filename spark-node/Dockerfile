@@ -1,10 +1,11 @@
-FROM netknight/java-env
+FROM netknight/java-env:latest
 MAINTAINER Jevgeni Goloborodko <jevgeni@alostel.com>
 VOLUME ["/tmp"]
 
 USER root
 
-ENV HADOOP_PREFIX /opt/hadoop
+ENV PRODUCT_HOME /opt/product
+ENV HADOOP_PREFIX $PRODUCT_HOME/hadoop
 ENV HADOOP_COMMON_HOME $HADOOP_PREFIX
 ENV HADOOP_HDFS_HOME $HADOOP_COMMON_HOME
 ENV HADOOP_MAPRED_HOME $HADOOP_COMMON_HOME
@@ -13,7 +14,11 @@ ENV HADOOP_CONF_DIR $HADOOP_PREFIX/etc/hadoop
 ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
 
 RUN wget http://www.eu.apache.org/dist/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz
-RUN tar -zxf hadoop*.gz -C /opt/ && ln -s /opt/hadoop-2.6.0 $HADOOP_COMMON_HOME
+RUN tar -zxf hadoop*.gz -C $PRODUCT_HOME
+RUN chown -R product:product $PRODUCT_HOME/hadoop*
+RUN ln -s $PRODUCT_HOME/hadoop-2.6.0 $HADOOP_COMMON_HOME
+
+RUN chmod "+x" $HADOOP_CONF_DIR/*.sh
 
 #RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/java/default\nexport HADOOP_PREFIX=/usr/local/hadoop\nexport HADOOP_HOME=/usr/local/hadoop\n:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 #RUN sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop/:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
@@ -31,4 +36,5 @@ ENV BOOTSTRAP /etc/bootstrap.sh
 
 CMD ["/etc/bootstrap.sh"]
 
+EXPOSE 22
 #EXPOSE 50020 50090 50070 50010 50075 8031 8032 8033 8040 8042 49707 22 8088 8030 19888
