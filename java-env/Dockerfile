@@ -12,13 +12,11 @@ ENV BASE_DIR /opt
 RUN apt-get update && apt-get -y install htop mc sysstat netcat net-tools lsof telnet traceroute wget busybox nano less ed vim man sudo zip unzip curl ssh openssl logrotate libc-bin locales
 
 # Install locales
-#RUN apt-get install libc-bin
-#RUN apt-get install --reinstall locales
-RUN locale-gen en_US.UTF-8  
+RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+RUN locale-gen
 ENV LANG en_US.UTF-8
-ENV LC_CTYPE en_US.UTF-8
-ENV LC_ALL en_US.UTF-8  
-RUN dpkg-reconfigure locales
+ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 # Install Java8 runtime
 ENV JAVA_HOME=$BASE_DIR/jre
@@ -38,7 +36,6 @@ RUN mkdir $PRODUCT_HOME/.ssh && chown product:product $PRODUCT_HOME/.ssh && chmo
 RUN ssh-keygen -q -N "" -t rsa -f $PRODUCT_HOME/.ssh/id_rsa
 RUN echo "StrictHostKeyChecking no" >> $PRODUCT_HOME/.ssh/config
 RUN cp $PRODUCT_HOME/.ssh/id_rsa.pub $PRODUCT_HOME/.ssh/authorized_keys && chown product:product $PRODUCT_HOME/.ssh/*
-
 
 CMD ["bash"]
 
