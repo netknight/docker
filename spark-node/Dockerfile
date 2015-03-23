@@ -22,32 +22,41 @@ RUN wget -P $PRODUCT_HOME http://www.eu.apache.org/dist/hadoop/common/hadoop-2.6
 RUN wget -P $PRODUCT_HOME http://d3kbcqa49mib13.cloudfront.net/spark-1.3.0-bin-hadoop2.4.tgz
 RUN wget -P $PRODUCT_HOME http://www.trieuvan.com/apache/hbase/hbase-1.0.0/hbase-1.0.0-bin.tar.gz
 RUN wget -P $PRODUCT_HOME http://mirror.cc.columbia.edu/pub/software/apache/kafka/0.8.2.1/kafka_2.11-0.8.2.1.tgz
+RUN wget -P $PRODUCT_HOME http://dl.bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64-2.6.0.tar
 
 # Prepare base system
 #RUN apt-get install --no-install-recommends -y -q curl sudo supervisor
 ENV JAVA_TOOL_OPTIONS "-Djava.net.preferIPv4Stack=true"
 
 # Hadoop install
-RUN tar zxf $PRODUCT_HOME/hadoop*.gz -C $PRODUCT_HOME
+RUN tar zxf $PRODUCT_HOME/hadoop-*.gz -C $PRODUCT_HOME
 RUN chown -R product:product $PRODUCT_HOME/hadoop*
 RUN ln -s $PRODUCT_HOME/hadoop-2.6.0 $HADOOP_COMMON_HOME
 RUN chmod "+x" $HADOOP_CONF_DIR/*.sh
-#RUN $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 ADD core-site.xml $HADOOP_CONF_DIR/core-site.xml
 ADD hdfs-site.xml $HADOOP_CONF_DIR/hdfs-site.xml
+RUN sed -i "/^export JAVA_HOME/ s:.*:export JAVA_HOME=$JAVA_HOME\nexport HADOOP_PREFIX=$HADOOP_PREFIX\nexport HADOOP_HOME=$HADOOP_COMMON_HOME\n:" $HADOOP_CONF_DIR/hadoop-env.sh
+RUN sed -i "/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=$HADOOP_CONF_DIR/:" $HADOOP_CONF_DIR/hadoop-env.sh
+
 RUN $HADOOP_COMMON_HOME/bin/hdfs namenode -format
 
+# fixing the libhadoop.so like a boss
+RUN rm $HADOOP_PREFIX/lib/native/*
+RUN tar xf $PRODUCT_HOME/hadoop-native-*.tar -C $HADOOP_PREFIX/lib/native
+
 # Spark install
-RUN tar xf $PRODUCT_HOME/spark*.tgz -C $PRODUCT_HOME
+RUN tar xf $PRODUCT_HOME/spark-*.tgz -C $PRODUCT_HOME
 RUN ln -s $PRODUCT_HOME/spark-1.3.0-bin-hadoop2.4 $SPARK_HOME
 
 # HBase install
-RUN tar zxf $PRODUCT_HOME/hbase*.gz -C $PRODUCT_HOME
+RUN tar zxf $PRODUCT_HOME/hbase-*.gz -C $PRODUCT_HOME
 RUN ln -s $PRODUCT_HOME/hbase-1.0.0 $HBASE_HOME
+RUN chmod "+x" $HBASE_HOME/conf/*.sh
 ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
+RUN sed -i "/^# export JAVA_HOME/ s:.*:export JAVA_HOME=$JAVA_HOME:" $HBASE_HOME/conf/hbase-env.sh
 
 # Kafka install
-RUN tar xf $PRODUCT_HOME/kafka*.tgz -C $PRODUCT_HOME
+RUN tar xf $PRODUCT_HOME/kafka_*.tgz -C $PRODUCT_HOME
 RUN ln -s $PRODUCT_HOME/kafka_2.11-0.8.2.1 $KAFKA_HOME
 ADD server.properties $KAFKA_HOME/config/server.properties
 
