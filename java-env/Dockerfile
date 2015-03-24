@@ -19,9 +19,9 @@ ENV LC_ALL en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
 # Install Java8 runtime
-ENV JAVA_HOME=$BASE_DIR/jre
-RUN wget --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u40-b26/jre-8u40-linux-x64.tar.gz
-RUN tar -zxf jre*.gz -C $BASE_DIR && ln -s $BASE_DIR/jre1.8.0_40 $JAVA_HOME
+ENV JAVA_HOME=$BASE_DIR/jdk
+RUN wget --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u40-b26/jdk-8u40-linux-x64.tar.gz
+RUN tar -zxf jdk*.gz -C $BASE_DIR && ln -s $BASE_DIR/jdk1.8.0_40 $JAVA_HOME
 RUN update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java 100
 RUN echo "export JAVA_HOME=`echo $JAVA_HOME`" >> /etc/profile
 
