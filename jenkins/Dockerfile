@@ -15,4 +15,5 @@ COPY plugins.txt /usr/share/jenkins/ref/
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 
 USER root
-RUN service docker start
+RUN gpasswd -a jenkins docker
+#RUN service docker start
