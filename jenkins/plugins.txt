@@ -1,0 +1,14 @@
+scm-api:1.0
+git-client:1.19.0
+git:2.4.1
+mercurial:1.54
+bitbucket:1.1.4
+all-changes:1.3
+credentials:1.24
+build-monitor-plugin:1.7+build.172
+sbt:1.5
+slack:1.8.1
+ssh:2.4
+test-stability:1.0
+timestamper:1.7.2
+disk-usage:0.28
