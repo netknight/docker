@@ -16,4 +16,7 @@ RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 
 USER root
 RUN gpasswd -a jenkins docker
-#RUN service docker start
+RUN echo 'DOCKER_OPTS="--insecure-registry registry:5000"' >> /etc/default/docker
+COPY term.sh /etc/profile.d/
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/entrypoint.sh"]
