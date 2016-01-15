@@ -12,3 +12,4 @@ ssh:2.4
 test-stability:1.0
 timestamper:1.7.2
 disk-usage:0.28
+publish-over-ssh:1.13

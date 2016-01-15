@@ -17,6 +17,7 @@ RUN locale-gen
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
+ENV TERM=xterm
 
 # Install Java8 runtime
 ENV JAVA_HOME=$BASE_DIR/jdk
