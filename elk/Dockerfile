@@ -1,4 +1,4 @@
-FROM netknight/java8
+FROM netknight/java
 MAINTAINER Jevgeni Goloborodko <jevgeni@digital-magic.io>
 
 # Elastic search
