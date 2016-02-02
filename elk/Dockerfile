@@ -33,4 +33,4 @@ ADD kibana.conf /etc/supervisor/conf.d/kibana.conf
 ENV PATH /opt/logstash/bin:$PATH
 CMD [ "/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf" ]
 
-EXPOSE 80 9200 9201 9300 3301
+EXPOSE 80 9200 9201 9300 9301
