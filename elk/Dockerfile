@@ -1,25 +1,24 @@
 FROM netknight/java
 MAINTAINER Jevgeni Goloborodko <jevgeni@digital-magic.io>
 
-# Elastic search
+# Update apt repository and install required packages
 RUN wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - && \
-	echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+	echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list && \
+	echo "deb http://packages.elastic.co/logstash/2.2/debian stable main" | sudo tee -a /etc/apt/sources.list
 
 RUN sudo apt-get update && \
-	sudo apt-get --no-install-recommends -y install elasticsearch && \
+	sudo apt-get --no-install-recommends -y install elasticsearch logstash && \
 	apt-get clean && \
 	sed -i '/#cluster.name:.*/a cluster.name: logstash' /etc/elasticsearch/elasticsearch.yml && \
 	sed -i '/#path.data: \/path\/to\/data/a path.data: /data' /etc/elasticsearch/elasticsearch.yml
 
+# Elastic search
 ADD elasticsearch.conf /etc/supervisor/conf.d/elasticsearch.conf
 
-#RUN /usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ
+RUN /usr/share/elasticsearch/bin/plugin install royrusso/elasticsearch-HQ
+RUN /usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head
 
 # Logstash
-RUN echo 'deb http://packages.elasticsearch.org/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list && \
-	apt-get install --no-install-recommends -y logstash && \
-    apt-get clean
-
 ADD logstash.conf /etc/supervisor/conf.d/logstash.conf
 
 # Logstash plugins
