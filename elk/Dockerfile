@@ -13,8 +13,11 @@ RUN sudo apt-get update && \
 
 ADD elasticsearch.conf /etc/supervisor/conf.d/elasticsearch.conf
 
+RUN /usr/share/elasticsearch/bin/plugin -install royrusso/elasticsearch-HQ
+
 # Logstash
-RUN apt-get install --no-install-recommends -y logstash && \
+RUN echo 'deb http://packages.elasticsearch.org/logstash/2.2/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list && \
+	apt-get install --no-install-recommends -y logstash && \
     apt-get clean
 
 ADD logstash.conf /etc/supervisor/conf.d/logstash.conf
